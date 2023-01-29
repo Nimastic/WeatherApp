@@ -1,0 +1,43 @@
+let news = {
+    apiKey: "pub_15643ad3b2b392ac673b0feea120305e144f8",
+    fetchNews: function (city) {
+      fetch(
+        'https://newsdata.io/api/1/news?apikey='
+        + this.apiKey
+        + "&q="
+        + city
+      )
+        .then((response) => {
+          if (!response.ok) {
+            alert("No city found.");
+            throw new Error("No city found.");
+          }
+          return response.json();
+        })
+        .then((data) => this.displayNews(data));
+    },
+    displayNews: function (data) {
+      const { name } = data;
+      const { title } = data.results[0];
+      const { link } = data.results[0];
+      document.querySelector(".title").innerText = "News FLASH: " + title;
+      document.querySelector(".link").innerText = "Link:" + link;
+    },
+    search: function () {
+      this.fetchNews(document.querySelector(".search-bar").value);
+    },
+  };
+  
+  document.querySelector(".search button").addEventListener("click", function () {
+    news.search();
+  });
+  
+  document
+    .querySelector(".search-bar")
+    .addEventListener("keyup", function (event) {
+      if (event.key == "Enter") {
+        news.search();
+      }
+    });
+  
+  news.fetchNews("Singapore");
